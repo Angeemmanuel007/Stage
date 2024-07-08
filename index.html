@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e9ecef;
+            background-color: #f8f9fa;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,16 +19,16 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            width: 400px;
             text-align: center;
         }
         .container h2 {
-            margin-bottom: 10px;
-            color: #333;
+            margin-bottom: 20px;
+            color: #343a40;
         }
         .container p {
-            margin-bottom: 20px;
-            color: #555;
+            margin-bottom: 30px;
+            color: #6c757d;
         }
         .form-group {
             margin-bottom: 20px;
@@ -37,22 +37,25 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
+            color: #495057;
         }
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #ced4da;
             border-radius: 5px;
             box-sizing: border-box;
             transition: border-color 0.3s;
         }
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: #007bff;
             outline: none;
             box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
         }
-        .form-group input.invalid {
+        .form-group input.invalid,
+        .form-group select.invalid {
             border-color: red;
             box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
         }
@@ -71,6 +74,13 @@
             font-size: 14px;
             margin-top: 5px;
             display: none;
+        }
+        .expiry-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        .expiry-group select {
+            width: 48%;
         }
     </style>
 </head>
@@ -91,8 +101,34 @@
             </div>
             <div class="form-group">
                 <label for="expiry-date">Date d'expiration</label>
-                <input type="text" id="expiry-date" name="expiry-date" required placeholder="MM/AA" pattern="(0[1-9]|1[0-2])\/\d{2}" title="Le format doit être MM/AA.">
-                <span class="error" id="expiry-error">Veuillez entrer une date d'expiration valide (format MM/AA).</span>
+                <div class="expiry-group">
+                    <select id="expiry-month" name="expiry-month" required>
+                        <option value="" disabled selected>Mois</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                    <select id="expiry-year" name="expiry-year" required>
+                        <option value="" disabled selected>Année</option>
+                        <option value="24">2024</option>
+                        <option value="25">2025</option>
+                        <option value="26">2026</option>
+                        <option value="27">2027</option>
+                        <option value="28">2028</option>
+                        <option value="29">2029</option>
+                        <option value="30">2030</option>
+                    </select>
+                </div>
+                <span class="error" id="expiry-error">Veuillez entrer une date d'expiration valide.</span>
             </div>
             <div class="form-group">
                 <label for="cvv">Code de sécurité (CVV)</label>
@@ -111,7 +147,8 @@
 
             var nameField = document.getElementById('card-name');
             var numberField = document.getElementById('card-number');
-            var expiryField = document.getElementById('expiry-date');
+            var monthField = document.getElementById('expiry-month');
+            var yearField = document.getElementById('expiry-year');
             var cvvField = document.getElementById('cvv');
 
             var nameError = document.getElementById('name-error');
@@ -126,7 +163,8 @@
 
             nameField.classList.remove('invalid');
             numberField.classList.remove('invalid');
-            expiryField.classList.remove('invalid');
+            monthField.classList.remove('invalid');
+            yearField.classList.remove('invalid');
             cvvField.classList.remove('invalid');
 
             if (!nameField.checkValidity()) {
@@ -139,9 +177,10 @@
                 numberField.classList.add('invalid');
                 valid = false;
             }
-            if (!expiryField.checkValidity()) {
+            if (monthField.value === "" || yearField.value === "") {
                 expiryError.style.display = 'block';
-                expiryField.classList.add('invalid');
+                monthField.classList.add('invalid');
+                yearField.classList.add('invalid');
                 valid = false;
             }
             if (!cvvField.checkValidity()) {
